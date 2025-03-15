@@ -100,7 +100,6 @@ class TMDbAPI:
         external_ids = self.get_external_ids(tv_id)
         imdb_id = external_ids.get("imdb_id")
 
-        # Format the response
         result = {
             "title": tv_details.get("name"),
             "original_title": tv_details.get("original_name"),
@@ -160,7 +159,6 @@ class TMDbAPI:
         # Get detailed information about the TV show
         endpoint = f"/tv/{tv_id}"
         tv_details = self._make_request(endpoint)
-        seasons = tv_details.get("seasons", [])
 
         # Get external IDs including IMDb ID
         external_ids = self.get_external_ids(tv_id)
@@ -188,7 +186,7 @@ class TMDbAPI:
                 self.logger.error(f"Error getting OMDb ratings: {e}")
 
         # Filter out special seasons (season 0)
-        regular_seasons = [s for s in seasons if s.get("season_number", 0) > 0]
+        regular_seasons = [s for s in tv_details.get("seasons", []) if s.get("season_number", 0) > 0]
 
         # Get current date for comparing with air dates
         current_date = datetime.now().date()
@@ -295,7 +293,7 @@ class TMDbAPI:
                 ),
                 "overview": show.get("overview"),
                 "first_air_date": show.get("first_air_date"),
-                "vote_average": show.get("vote_average"),
+                "vote_average": round(show.get("vote_average", 0), 1),
                 "poster_path": f"https://image.tmdb.org/t/p/w500{show.get('poster_path')}"
                 if show.get("poster_path")
                 else None,

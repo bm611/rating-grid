@@ -32,39 +32,81 @@ def hero() -> rx.Component:
 def movie_card(show: Dict[str, Any]) -> rx.Component:
     return rx.box(
         rx.link(
-            rx.image(
-                src=show["poster_path"],
-                class_name="w-full h-3/4 object-cover rounded-2xl mb-4",
-            ),
-            class_name="transition-opacity duration-300 ease-in-out hover:opacity-70",
-        ),
-        rx.text(
-            show["name"], class_name="mt-2 text-sm md:text-base tracking-wide truncate"
-        ),
-        rx.hstack(
-            rx.image(
-                src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg",
-                width="36px",
-                height="18px",
-                html_width="36px",
-                html_height="18px",
-            ),
-            rx.cond(
-                show["imdb_rating"],
-                rx.text(
-                    show["imdb_rating"],
-                    class_name="text-gray-500 text-xs md:text-sm",
+            rx.vstack(
+                # Card image container with neo-brutalist style
+                rx.box(
+                    rx.image(
+                        src=show["poster_path"],
+                        class_name="w-full h-full object-cover",
+                    ),
+                    # Thick border characteristic of neo-brutalism without rotation
+                    class_name="w-full aspect-[2/3] overflow-hidden relative border-4 border-black transition-transform duration-300",
                 ),
-                rx.text(
-                    "N/A",
-                    class_name="text-gray-500 text-xs md:text-sm",
+                # Content container with bold styling
+                rx.vstack(
+                    # Title with bold font
+                    rx.text(
+                        show["name"],
+                        class_name="font-bold text-smmd:text-lg tracking-wide truncate w-full text-black",
+                    ),
+                    # Ratings container - horizontal stack for both ratings
+                    rx.hstack(
+                        # TMDb rating
+                        rx.hstack(
+                            rx.image(
+                                src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg",
+                                width="24px",
+                                height="24px",
+                                html_width="24px",
+                                html_height="24px",
+                            ),
+                            rx.text(
+                                show["vote_average"],
+                                class_name="text-black text-xs md:text-sm font-bold",
+                            ),
+                            spacing="2",
+                            align_items="center",
+                            class_name="bg-gray-200 px-2 py-1 border-2 border-black min-w-[80px] h-[36px] flex justify-center rounded-2xl",
+                        ),
+                        # IMDb rating - always displayed with N/A if missing
+                        rx.hstack(
+                            rx.image(
+                                src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg",
+                                width="36px",
+                                height="18px",
+                                html_width="36px",
+                                html_height="18px",
+                            ),
+                            rx.cond(
+                                show["imdb_rating"],
+                                rx.text(
+                                    show["imdb_rating"],
+                                    class_name="text-black text-xs md:text-sm font-bold",
+                                ),
+                                rx.text(
+                                    "N/A",
+                                    class_name="text-black text-xs md:text-sm font-bold",
+                                ),
+                            ),
+                            spacing="2",
+                            align_items="center",
+                            class_name="bg-yellow-200 px-2 py-1 border-2 border-black min-w-[80px] h-[36px] flex justify-center rounded-2xl",
+                        ),
+                        spacing="2",
+                        align_items="center",
+                        class_name="mt-2",
+                    ),
+                    align_items="start",
+                    spacing="0",
+                    class_name="w-full pt-3 px-1 mb-2",
                 ),
+                class_name="w-full",
             ),
-            spacing="2",
-            align_items="center",
-            class_name="mt-2 flex items-center",
+            # Add hover effect to entire card
+            class_name="no-underline text-inherit",
         ),
-        class_name="w-full rounded-lg overflow-hidden transition-shadow duration-300",
+        # Neo-brutalist container with bold borders and background
+        class_name="bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 rounded-none p-2 mb-4 hover:-translate-y-1 hover:translate-x-1",
     )
 
 
@@ -78,7 +120,7 @@ def popular():
                 State.popular_tv_shows,
                 movie_card,
             ),
-            class_name="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-6",
+            class_name="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6",
             wrap="wrap",
         ),
         on_mount=State.fetch_popular_tv_shows,

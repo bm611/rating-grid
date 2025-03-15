@@ -11,6 +11,7 @@ def index() -> rx.Component:
         hero(),
         popular(),
         class_name="flex justify-center items-center",
+        size="4",
     )
 
 
